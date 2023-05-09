@@ -1,8 +1,33 @@
 public class ScreenManager {
     private static ScreenManager instance = null;
 
-    private char[][] currentScreen;
-    private char[][] cachedScreen;
+    /*
+     * Positive x is this way →	
+     * Positive y is this way ↓
+     * 
+     */
+
+     private final String[] map = {
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜"
+    };
+
+    private String[] currentScreen = map;
+
+    private volatile String[] cachedScreen = {
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "🟩⬛⬛⬛⬛⬛⬛⬛⬛⬛",
+        "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜"
+    };
 
     private ScreenManager()
     {
@@ -23,15 +48,24 @@ public class ScreenManager {
     {
         if(currentScreen != cachedScreen)
         {
-            for(int x = 0; x < currentScreen.length; x++)
+            clearScreen();
+            for(int i = 0; i < cachedScreen.length; i++)
             {
-                for(int y = 0; y < currentScreen[x].length; y++){
-                    System.out.println(cachedScreen[x][y]);
-                }
-                System.out.println();
+                System.out.println(cachedScreen[i]);
             }
             currentScreen = cachedScreen;
         }
+    }
+
+    public synchronized void moveObject(Coordinate target, Coordinate prev, String sprite)
+    {
+        
+    }
+
+    private void clearScreen()
+    {
+        System.out.print("\033[H\033[2J");
+        System.out.flush();
     }
 
     public static ScreenManager getInstance()
