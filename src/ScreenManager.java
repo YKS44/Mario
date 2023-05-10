@@ -1,3 +1,5 @@
+import java.util.Arrays;
+
 public class ScreenManager {
     private static ScreenManager instance = null;
 
@@ -7,7 +9,7 @@ public class ScreenManager {
      * 
      */
 
-     private final String[] map = {
+    private String[] currentScreen = {
         "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
         "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
         "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
@@ -16,8 +18,6 @@ public class ScreenManager {
         "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
         "⬜⬜⬜⬜⬜⬜⬜⬜⬜⬜"
     };
-
-    private String[] currentScreen = map;
 
     private volatile String[] cachedScreen = {
         "⬛⬛⬛⬛⬛⬛⬛⬛⬛⬛",
@@ -46,20 +46,36 @@ public class ScreenManager {
 
     private void updateScreen()
     {
-        if(currentScreen != cachedScreen)
+        if(!Arrays.equals(currentScreen, cachedScreen))
         {
             clearScreen();
             for(int i = 0; i < cachedScreen.length; i++)
             {
                 System.out.println(cachedScreen[i]);
             }
-            currentScreen = cachedScreen;
         }
     }
 
     public synchronized void moveObject(Coordinate target, Coordinate prev, String sprite)
     {
-        
+        String newColumn = cachedScreen[target.getY()];
+
+        if(target.getY() == prev.getY())
+        {
+            newColumn = newColumn.replace(sprite, "⬛");
+            newColumn = newColumn.substring(0,target.getX()) + sprite + newColumn.substring(target.getX()+1);
+            // System.out.println(newColumn);
+
+            cachedScreen[target.getY()] = newColumn;  
+        }
+        else
+        {
+
+            String removeTrace = cachedScreen[prev.getY()];
+    
+            removeTrace = removeTrace.substring(0,prev.getX()) + "⬛" + newColumn.substring(prev.getX()+1);
+        }
+
     }
 
     private void clearScreen()

@@ -9,10 +9,12 @@ import Actions.LambdaAction;
 
 public class Mario {
     private final String sprite = "🟩";
-    private Coordinate pos = new Coordinate(0, 5);
+    private Coordinate pos = new Coordinate(0, 5, 9, 0, 5, 0);
     private Coordinate prev = pos;
 
     private final KeyboardInput keyboardInput;
+
+    private final LeftRightMovementManager lrMovementManager = LeftRightMovementManager.getInstance();
     
     public Mario()
     {
@@ -21,34 +23,40 @@ public class Mario {
 
     private void moveLeft()
     {
-        pos.addXBy(-1);
-        ScreenManager.getInstance().moveObject(pos, prev, sprite);
-        prev = pos;
+        lrMovementManager.setMovingLeft(true);
+
+        if(lrMovementManager.canMove(false))
+        {
+            pos.addXBy(-1);
+            ScreenManager.getInstance().moveObject(pos, prev, sprite);
+            prev = pos;
+        }
     }
 
     private void moveRight()
     {
-        pos.addXBy(1);
-        ScreenManager.getInstance().moveObject(pos, prev, sprite);
-        prev = pos;
+        lrMovementManager.setMovingRight(true);
+
+        if(lrMovementManager.canMove(true))
+        {
+            pos.addXBy(1);
+            ScreenManager.getInstance().moveObject(pos, prev, sprite);
+            prev = pos;
+        }
     }
 
     private class KeyboardInput implements KeyListener{
         private HashMap<Integer, Action> keyMap = new HashMap<>();
     
         public KeyboardInput() {
-            // Create a new Frame to listen for keyboard events
             Frame frame = new Frame();
     
-            // Add the KeyListener to the Frame
             frame.addKeyListener(this);
     
-            // Set the size and visibility of the Frame
             frame.setSize(180, 0);
             frame.setTitle("Mario Game");
             frame.setVisible(true);
     
-            // Request focus for the Frame so that it can receive keyboard events
             frame.requestFocus();
     
             registerKeyMaps();
@@ -56,8 +64,8 @@ public class Mario {
        
         private void registerKeyMaps()
         {
-            keyMap.put(KeyEvent.VK_A, new HoldAction(()->System.out.println("left")));
-            keyMap.put(KeyEvent.VK_D, new HoldAction(()->System.out.println("right")));
+            keyMap.put(KeyEvent.VK_A, new HoldAction(()->moveLeft(), ()->lrMovementManager.setMovingLeft(false)));
+            keyMap.put(KeyEvent.VK_D, new HoldAction(()->moveRight(), ()->lrMovementManager.setMovingRight(false)));
             keyMap.put(KeyEvent.VK_SPACE, new LambdaAction(()->System.out.println("jump")));
             keyMap.put(KeyEvent.VK_ESCAPE, new LambdaAction(()->System.exit(0)));
         }
@@ -84,5 +92,4 @@ public class Mario {
         @Override
         public void keyTyped(KeyEvent e) {}
     }
-    
 }
