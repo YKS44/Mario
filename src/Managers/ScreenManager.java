@@ -1,4 +1,7 @@
+package Managers;
 import java.util.Arrays;
+
+import Utils.Coordinate;
 
 public class ScreenManager {
     private static ScreenManager instance = null;
@@ -38,7 +41,9 @@ public class ScreenManager {
 
                 try{
                     Thread.sleep(10);
-                }catch(InterruptedException e){}
+                }catch(InterruptedException e){
+                    e.printStackTrace();
+                }
             }
         });
         screenThread.start();
@@ -49,9 +54,10 @@ public class ScreenManager {
         if(!Arrays.equals(currentScreen, cachedScreen))
         {
             clearScreen();
-            for(int i = 0; i < cachedScreen.length; i++)
+            currentScreen = Arrays.copyOf(cachedScreen, cachedScreen.length);
+            for(int i = 0; i < currentScreen.length; i++)
             {
-                System.out.println(cachedScreen[i]);
+                System.out.println(currentScreen[i]);
             }
         }
     }
@@ -64,7 +70,6 @@ public class ScreenManager {
         {
             newColumn = newColumn.replace(sprite, "⬛");
             newColumn = newColumn.substring(0,target.getX()) + sprite + newColumn.substring(target.getX()+1);
-            // System.out.println(newColumn);
 
             cachedScreen[target.getY()] = newColumn;  
         }
@@ -72,8 +77,12 @@ public class ScreenManager {
         {
 
             String removeTrace = cachedScreen[prev.getY()];
-    
-            removeTrace = removeTrace.substring(0,prev.getX()) + "⬛" + newColumn.substring(prev.getX()+1);
+            removeTrace = removeTrace.replace(sprite, "⬛");
+            
+            newColumn = newColumn.substring(0,target.getX()) + sprite + newColumn.substring(target.getX()+1);
+
+            cachedScreen[prev.getY()] = removeTrace;
+            cachedScreen[target.getY()] = newColumn;
         }
 
     }

@@ -6,6 +6,9 @@ import java.util.HashMap;
 import Actions.Action;
 import Actions.HoldAction;
 import Actions.LambdaAction;
+import Managers.LeftRightMovementManager;
+import Managers.ScreenManager;
+import Utils.Coordinate;
 
 public class Mario {
     private final String sprite = "🟩";

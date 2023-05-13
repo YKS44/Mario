@@ -1,3 +1,4 @@
+package Managers;
 public class LeftRightMovementManager {
     private static LeftRightMovementManager instance = null;
 

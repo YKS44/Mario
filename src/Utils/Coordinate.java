@@ -1,5 +1,4 @@
-import Utils.MathUtil;
-
+package Utils;
 public class Coordinate {
     private int x;
     private int y;
@@ -47,5 +46,11 @@ public class Coordinate {
     {
         x += amount;
         x = MathUtil.clamp(x, minX, maxX);
+    }
+
+    public void addYBy(int amount)
+    {
+        y+= amount;
+        y = MathUtil.clamp(y, minY, maxY);
     }
 }
